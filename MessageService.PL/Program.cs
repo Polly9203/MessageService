@@ -10,7 +10,7 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
     .Enrich.FromLogContext()
-    .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.File("C:\\Logs\\log.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
 builder.Services.AddControllers();
