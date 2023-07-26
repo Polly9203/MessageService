@@ -11,6 +11,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMessageServiceBll();
 builder.Services.AddMessageServiceDAL(builder.Configuration);
 
+builder.Services.AddHostedService<MessageSenderService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
