@@ -1,4 +1,5 @@
 using MessageService.BLL;
+using MessageService.BLL.Services;
 using MessageService.DAL;
 
 var builder = WebApplication.CreateBuilder(args);

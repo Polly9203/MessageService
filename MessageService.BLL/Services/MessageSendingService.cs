@@ -2,35 +2,38 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-public class MessageSenderService : BackgroundService
+namespace MessageService.BLL.Services
 {
-    private readonly IServiceScopeFactory _serviceScopeFactory;
-
-    public MessageSenderService(IServiceScopeFactory serviceScopeFactory)
+    public class MessageSenderService : BackgroundService
     {
-        _serviceScopeFactory = serviceScopeFactory;
-    }
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        while (!stoppingToken.IsCancellationRequested)
+        public MessageSenderService(IServiceScopeFactory serviceScopeFactory)
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var messageRepository = scope.ServiceProvider.GetRequiredService<IMessageRepository>();
-
-                var message = "Auto message";
-                var dateCreated = DateTime.Now;
-
-                SendMessage(messageRepository, message, dateCreated);
-            }
-
-            await Task.Delay(10000, stoppingToken);
+            _serviceScopeFactory = serviceScopeFactory;
         }
-    }
 
-    private void SendMessage(IMessageRepository messageRepository, string message, DateTime dateCreated)
-    {
-        messageRepository.SendMessage(message, dateCreated);
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                using (var scope = _serviceScopeFactory.CreateScope())
+                {
+                    var messageRepository = scope.ServiceProvider.GetRequiredService<IMessageRepository>();
+
+                    var message = "Auto message";
+                    var dateCreated = DateTime.Now;
+
+                    SendMessage(messageRepository, message, dateCreated);
+                }
+
+                await Task.Delay(10000, stoppingToken);
+            }
+        }
+
+        private void SendMessage(IMessageRepository messageRepository, string message, DateTime dateCreated)
+        {
+            messageRepository.SendMessage(message, dateCreated);
+        }
     }
 }
