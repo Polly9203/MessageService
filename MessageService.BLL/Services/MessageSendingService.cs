@@ -1,6 +1,7 @@
 ﻿using MessageService.DAL.Repositories.MessageRepository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace MessageService.BLL.Services
 {
@@ -24,7 +25,14 @@ namespace MessageService.BLL.Services
                     var message = "Auto message";
                     var dateCreated = DateTime.Now;
 
-                    SendMessage(messageRepository, message, dateCreated);
+                    try
+                    {
+                        SendMessage(messageRepository, message, dateCreated);
+                    }
+                    catch (Exception ex) 
+                    {
+                        Log.Error(ex, "Error sending the message: {Message}", ex.Message);
+                    }
                 }
 
                 await Task.Delay(10000, stoppingToken);
