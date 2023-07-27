@@ -8,8 +8,7 @@ using Serilog.Events;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
     .WriteTo.File("C:\\Logs\\log.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
