@@ -1,5 +1,6 @@
 using MessageService.BLL;
 using MessageService.BLL.Services;
+using MessageService.BLL.Settings;
 using MessageService.DAL;
 using Serilog;
 using Serilog.Events;
@@ -21,6 +22,8 @@ builder.Services.AddMessageServiceBll();
 builder.Services.AddMessageServiceDAL(builder.Configuration);
 
 builder.Services.AddHostedService<MessageSenderService>();
+
+builder.Services.Configure<AutoMessagesSettings>(builder.Configuration.GetSection("AutoMessagesSettings"));
 
 var app = builder.Build();
 
