@@ -30,7 +30,6 @@ namespace MessageService.BLL.Services
                     try
                     {
                         SendMessage(messageRepository, autoMessagesSettings.MessageText, dateCreated);
-                        Log.Information("Message sended succesfuly");
                     }
                     catch (Exception ex)
                     {
