@@ -1,5 +1,6 @@
 using MessageService.BLL;
 using MessageService.BLL.Services;
+using MessageService.BLL.Settings;
 using MessageService.DAL;
 using Serilog;
 using Serilog.Events;
@@ -7,8 +8,7 @@ using Serilog.Events;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
     .WriteTo.File("C:\\Logs\\log.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
@@ -21,6 +21,8 @@ builder.Services.AddMessageServiceBll();
 builder.Services.AddMessageServiceDAL(builder.Configuration);
 
 builder.Services.AddHostedService<MessageSenderService>();
+
+builder.Services.Configure<AutoMessagesSettings>(builder.Configuration.GetSection("AutoMessagesSettings"));
 
 var app = builder.Build();
 

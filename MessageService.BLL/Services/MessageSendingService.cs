@@ -1,6 +1,8 @@
-﻿using MessageService.DAL.Repositories.MessageRepository;
+﻿using MessageService.BLL.Settings;
+using MessageService.DAL.Repositories.MessageRepository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace MessageService.BLL.Services
@@ -8,10 +10,12 @@ namespace MessageService.BLL.Services
     public class MessageSenderService : BackgroundService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly AutoMessagesSettings autoMessagesSettings;
 
-        public MessageSenderService(IServiceScopeFactory serviceScopeFactory)
+        public MessageSenderService(IServiceScopeFactory serviceScopeFactory, IOptions<AutoMessagesSettings> autoMessagesSettings)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            this.autoMessagesSettings = autoMessagesSettings.Value;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -21,21 +25,19 @@ namespace MessageService.BLL.Services
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     var messageRepository = scope.ServiceProvider.GetRequiredService<IMessageRepository>();
-
-                    var message = "Auto message";
                     var dateCreated = DateTime.Now;
 
                     try
                     {
-                        SendMessage(messageRepository, message, dateCreated);
+                        SendMessage(messageRepository, autoMessagesSettings.MessageText, dateCreated);
                     }
-                    catch (Exception ex) 
+                    catch (Exception ex)
                     {
                         Log.Error(ex, "Error sending the message: {Message}", ex.Message);
                     }
                 }
 
-                await Task.Delay(10000, stoppingToken);
+                await Task.Delay(autoMessagesSettings.SendingTimer, stoppingToken);
             }
         }
 
