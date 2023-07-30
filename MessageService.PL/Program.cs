@@ -3,14 +3,11 @@ using MessageService.BLL.Services;
 using MessageService.BLL.Settings;
 using MessageService.DAL;
 using Serilog;
-using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.File("C:\\Logs\\log.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
 builder.Services.AddControllers();
