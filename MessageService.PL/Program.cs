@@ -18,6 +18,7 @@ builder.Services.AddMessageServiceBll();
 builder.Services.AddMessageServiceDAL(builder.Configuration);
 
 builder.Services.AddHostedService<MessageSenderService>();
+builder.Services.AddHostedService<CommandSendingService>();
 
 builder.Services.Configure<AutoMessagesSettings>(builder.Configuration.GetSection("AutoMessagesSettings"));
 
